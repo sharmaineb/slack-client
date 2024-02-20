@@ -7,11 +7,11 @@ import './index.css';
 import App from './App';
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:5000/graphql', // Adjust the URI based on your GraphQL server endpoint
+  uri: 'http://localhost:5000/graphql',
 });
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:5000/graphql', // Adjust the URI based on your GraphQL server endpoint
+  uri: 'ws://localhost:5000/graphql', 
   options: {
     reconnect: true,
   },

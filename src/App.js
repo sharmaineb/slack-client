@@ -8,29 +8,27 @@ function App() {
     PostsForChannel,
     {
       variables: { channel: 'Main' },
+      fetchPolicy: 'network-only',
     }
   );
 
-  const [loadChannels, { called: channelsCalled, loading: channelsLoading, data: channelsData }] = useLazyQuery(
+  const [loadChannels, { loading: channelsLoading, data: channelsData, error: channelsError }] = useLazyQuery(
     Channels
   );
 
-  if (postsCalled && postsLoading) {
-    return <div>Loading posts...</div>;
+  if (postsLoading || channelsLoading) {
+    return <div>Loading...</div>;
   }
 
   if (!postsCalled) {
     return (
       <div className="App">
-        <button onClick={() => loadPosts()}>Load Posts</button>
+        <button onClick={loadPosts}>Load Posts</button>
       </div>
     );
   }
 
-  console.log(postsData);
-
   if (postsData && postsData.posts) {
-    console.log(postsData); 
     return (
       <div className="App">
         <h2>Posts:</h2>
@@ -38,6 +36,7 @@ function App() {
           <p key={`${post.date}-${index}`}>{post.message} {post.date}</p>
         ))}
         <h2>Channels:</h2>
+        {channelsError && <div>Error loading channels: {channelsError.message}</div>}
         {channelsData && channelsData.channels ? (
           <ul>
             {channelsData.channels.map(channel => (
@@ -47,11 +46,13 @@ function App() {
         ) : (
           <div>No channels available</div>
         )}
-        <button onClick={() => loadPosts()}>Load Posts</button>
-        <button onClick={() => loadChannels()}>Load Channels</button>
+        <button onClick={loadPosts}>Load Posts</button>
+        <button onClick={loadChannels}>Load Channels</button>
       </div>
     );
   }
+
+  return null;
 }
 
 export default App;
